@@ -2,6 +2,10 @@
 
 A simple social media dapp built on the Ethereum blockchain, which allow user to create post as an NFT, view posts and purchase posts.
 
+> Note: The app is not deployed to any testnet or mainnet, it is only running on a local blockchain for the purpose of learning. Do not use it to store any real ETH or NFTs.
+
+![Screenshot](public/screenshot.jpeg)
+
 ## Getting Started
 
 - Install [Ganache](https://trufflesuite.com/ganache/) for running a private blockchain
@@ -11,6 +15,8 @@ A simple social media dapp built on the Ethereum blockchain, which allow user to
 - Run `npm run migrate` to compile and deploy the smart contracts to the local blockchain.
 
 ## Development
+
+### Remember to run `npm run migrate` after making changes to the smart contracts.
 
 ### Send ETH to your wallet
 
