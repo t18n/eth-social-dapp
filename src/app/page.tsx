@@ -1,9 +1,8 @@
 'use client';
 
-import Head from 'next/head';
 import { useEffect, useState } from 'react';
-import { Wallet, ethers } from 'ethers';
-import useGetPosts, { Post } from '../hooks/use-get-posts';
+import { ethers } from 'ethers';
+import useGetPosts, { Post, connectWallet } from '../hooks/use-get-posts';
 import { shortenAddress } from '../utils/shorten-address';
 
 export default function Home() {
@@ -46,7 +45,14 @@ export default function Home() {
       <div className='flex flex-col gap-10'>
         <div className='flex justify-between align-center'>
           <h1 className='block font-sans text-5xl font-semibold'>ETH Social Dapp</h1>
-          {connectedAddress && <p className='block font-sans text-xl'>Connected to: {shortenAddress(connectedAddress)}</p>}
+          {connectedAddress ? (
+            <p className='block font-sans text-xl'>Connected to: {shortenAddress(connectedAddress)}</p>
+
+          ) : (
+            <button className="rounded-md bg-green-300 py-1 px-2 text-center" onClick={connectWallet}>
+              Login
+            </button>
+          )}
         </div>
         <div className='flex flex-col gap-4 max-w-md'>
           <textarea className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3" placeholder='Content' value={input} onChange={(e) => setInput(e.target.value)} />
@@ -64,8 +70,17 @@ export default function Home() {
                 {post.text}
               </p>
               <hr className='my-2' />
-              <p className="text-gray-500">Owner: {shortenAddress(post.owner)}</p>
-              <p className="text-gray-500">Original Owner: {shortenAddress(post.originalOwner)}</p>
+              {post.owner === post.originalOwner ? (
+                <>
+                  <p className="text-gray-500">Owner & Author: {shortenAddress(post.owner)}</p>
+                  <p className="text-gray-500">Never sold</p>
+                </>
+              ) : (
+                <>
+                  <p className="text-gray-500">Owner: {shortenAddress(post.owner)}</p>
+                  <p className="text-gray-500">Original Owner: {shortenAddress(post.originalOwner)}</p>
+                </>
+              )}
             </div>
 
             <div className="flex justify-between align-center">

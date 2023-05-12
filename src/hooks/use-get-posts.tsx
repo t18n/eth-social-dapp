@@ -11,7 +11,7 @@ export type Post = {
   price: string;
   text: string;
   originalOwner: string;
-}
+};
 
 export default function useGetPosts() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -31,17 +31,7 @@ export default function useGetPosts() {
   }
 
   async function createPost(text: string, price: string) {
-    const web3Modal = new Web3Modal({
-      cacheProvider: true,
-      providerOptions: {
-        walletconnect: {
-          package: WalletConnectProvider,
-        }
-      },
-    });
-    const instance = await web3Modal.connect();
-    const provider = new ethers.BrowserProvider(instance);
-    const signer = await provider.getSigner();
+    const { signer, provider } = await connectWallet();
     const smartContract = new ethers.Contract(contractAddress, abi, provider);
     const contractWithSigner = smartContract.connect(signer);
 
@@ -51,17 +41,7 @@ export default function useGetPosts() {
   }
 
   async function buyPost(index: number) {
-    const web3Modal = new Web3Modal({
-      cacheProvider: true,
-      providerOptions: {
-        walletconnect: {
-          package: WalletConnectProvider,
-        }
-      },
-    });
-    const instance = await web3Modal.connect();
-    const provider = new ethers.BrowserProvider(instance);
-    const signer = await provider.getSigner();
+    const { signer, provider } = await connectWallet();
     const smartContract = new ethers.Contract(contractAddress, abi, provider);
     const contractWithSigner = smartContract.connect(signer);
 
@@ -74,5 +54,23 @@ export default function useGetPosts() {
     posts,
     createPost,
     buyPost
+  };
+}
+
+export async function connectWallet() {
+  const web3Modal = new Web3Modal({
+    cacheProvider: true,
+    providerOptions: {
+      walletconnect: {
+        package: WalletConnectProvider,
+      }
+    },
+  });
+
+  const instance = await web3Modal.connect();
+  const provider = new ethers.BrowserProvider(instance);
+  return {
+    signer: await provider.getSigner(),
+    provider
   };
 }
